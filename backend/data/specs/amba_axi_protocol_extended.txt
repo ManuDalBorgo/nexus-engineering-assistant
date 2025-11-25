@@ -1,0 +1,78 @@
+AMBA AXI4 Protocol Specification (Extended Summary)
+
+1. Introduction
+The AMBA AXI protocol is a burst-based protocol for high-bandwidth, low-latency on-chip communication.
+
+2. Signal Descriptions
+- Global Signals: ACLK (Clock), ARESETn (Reset, active low).
+
+2.1 Write Address Channel (AW)
+- AWADDR: Write address.
+- AWVALID: Master valid signal.
+- AWREADY: Slave ready signal.
+- AWID: Write address ID.
+- AWLEN: Burst length. The burst length gives the exact number of transfers in a burst. This information determines the number of data transfers associated with the address.
+- AWSIZE: Burst size. This signal indicates the size of each transfer in the burst.
+- AWBURST: Burst type.
+- AWLOCK: Lock type.
+- AWCACHE: Cache type.
+- AWPROT: Protection type.
+
+2.2 Write Data Channel (W)
+- WDATA: Write data.
+- WSTRB: Write strobes.
+- WLAST: Write last.
+- WVALID: Master valid signal.
+- WREADY: Slave ready signal.
+
+2.3 Write Response Channel (B)
+- BRESP: Write response.
+- BVALID: Slave valid signal.
+- BREADY: Master ready signal.
+- BID: Response ID.
+
+2.4 Read Address Channel (AR)
+- ARADDR: Read address.
+- ARVALID: Master valid signal.
+- ARREADY: Slave ready signal.
+- ARID: Read address ID.
+- ARLEN: Burst length.
+- ARSIZE: Burst size.
+- ARBURST: Burst type.
+- ARLOCK: Lock type.
+- ARCACHE: Cache type.
+- ARPROT: Protection type.
+
+2.5 Read Data Channel (R)
+- RDATA: Read data.
+- RRESP: Read response.
+- RLAST: Read last.
+- RVALID: Slave valid signal.
+- RREADY: Master ready signal.
+- RID: Read ID.
+
+3. Handshake Process
+All five channels use the same VALID/READY handshake mechanism.
+- The source generates the VALID signal to indicate when the address, data, or control information is available.
+- The destination generates the READY signal to indicate that it can accept the information.
+- Transfer occurs only when both the VALID and READY signals are HIGH.
+- A source is not permitted to wait until READY is asserted before asserting VALID.
+- A destination is permitted to wait for VALID to be asserted before asserting READY.
+
+4. Burst Types (AxBURST)
+- FIXED (0b00): The address remains the same for every transfer in the burst. Useful for FIFO access.
+- INCR (0b01): The address increments for each transfer in the burst. Most common type.
+- WRAP (0b10): The address wraps around a boundary. Useful for cache line fills.
+
+5. Ordering Model
+AXI4 supports out-of-order transaction completion.
+- Transactions with different ID values can complete out of order.
+- Transactions with the same ID value must complete in order.
+
+6. AXI4-Lite
+AXI4-Lite is a subset of the AXI4 protocol intended for communication with simpler, smaller control register-style components.
+- All transactions are burst length of 1.
+- All data accesses are the same size as the data bus width.
+- No exclusive accesses.
+- No locked accesses.
+- No ID signals (all transactions are assumed to be in order).

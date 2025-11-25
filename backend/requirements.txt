@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+langchain
+langchain-community
+langchain-openai
+langchain-anthropic
+langchain-google-genai
+langchain-chroma
+langchain-ollama
+chromadb
+pydantic
+python-dotenv
+tiktoken
+sentence-transformers
+streamlit
+watchdog
+numpy<2.0.0
