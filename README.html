@@ -1,0 +1,86 @@
+
+    <html>
+    <head>
+        <style>
+            body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; }
+            pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+            code { background-color: #f4f4f4; padding: 2px 5px; border-radius: 3px; }
+            h1, h2, h3 { color: #333; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; }
+        </style>
+    </head>
+    <body>
+        <h1>Nexus: The AI-Powered Semiconductor Engineering Assistant</h1>
+<h2>Project Overview</h2>
+<p><strong>Nexus</strong> is a proof-of-concept <strong>Agentic AI Platform</strong> designed to demonstrate the future of engineering at <strong>Arm</strong>. It serves as an intelligent co-pilot for hardware architects and verification engineers, automating the translation of high-level specifications into compliant RTL designs and verification plans.</p>
+<p>This project was built to showcase the capabilities required for the <strong>AI Solutions Architect</strong> role, specifically focusing on:
+- <strong>Agentic AI</strong>: Multi-agent orchestration for complex problem solving (Planning, Coding, Reviewing).
+- <strong>RAG (Retrieval-Augmented Generation)</strong>: Context-aware answers based on technical specifications (e.g., AMBA AXI, ARMv9).
+- <strong>Guardrails &amp; Evaluation</strong>: Ensuring generated code meets strict syntax and safety standards.
+- <strong>Scalable Architecture</strong>: A modular design ready for enterprise deployment.</p>
+<h2>🏗️ Solution Architecture</h2>
+<h3>High-Level Design</h3>
+<p>Nexus operates on a <strong>Hub-and-Spoke Agentic Architecture</strong>:</p>
+<ol>
+<li><strong>Orchestrator Agent (The "Lead")</strong>: Deconstructs user requests (e.g., "Create an AXI4-Lite Slave module") into sub-tasks.</li>
+<li><strong>Knowledge Agent (The "Researcher")</strong>: Uses RAG to retrieve precise protocol constraints from indexed documentation.</li>
+<li><strong>RTL Agent (The "Implementer")</strong>: Generates Verilog/SystemVerilog code based on requirements and retrieved context.</li>
+<li><strong>Verification Agent (The "Tester")</strong>: Generates UVM testbench skeletons and SystemVerilog Assertions (SVA) to verify the design.</li>
+<li><strong>Guardrails Layer</strong>: Static analysis tools (linting) to validate outputs before presenting them to the user.</li>
+</ol>
+<h3>Technology Stack</h3>
+<ul>
+<li><strong>Core Logic</strong>: Python 3.10+</li>
+<li><strong>LLM Orchestration</strong>: LangChain / LangGraph</li>
+<li><strong>Vector Database</strong>: ChromaDB (for RAG)</li>
+<li><strong>API Interface</strong>: FastAPI</li>
+<li><strong>Frontend</strong>: Streamlit (for rapid, interactive prototyping).</li>
+</ul>
+<h2>🧠 Core Concepts Explained</h2>
+<h3>1. Orchestrated (The "Brain")</h3>
+<p>The <strong>NexusOrchestrator</strong> serves as the central manager. It receives raw engineering requests, analyzes the intent, and systematically coordinates the underlying agents. Instead of a simple chatbot response, the system breaks down complex tasks, calls the RAG system for context, and then constructs the final prompt for the LLM. This demonstrates a true <strong>Agentic Workflow</strong>.</p>
+<h3>2. RAG (Retrieval-Augmented Generation)</h3>
+<p>To prevent "hallucinations" and ensure technical accuracy, Nexus uses a Retrieval-Augmented Generation architecture. The system ingests the <strong>AMBA AXI4 Protocol Specifications</strong> into a local vector database (<code>ChromaDB</code>). When a user requests an "AXI Slave," the system searches this database, retrieves the exact signal definitions (e.g., <code>AWVALID</code>, <code>WREADY</code>), and grounds its response in Arm's official documentation.</p>
+<h3>3. RTL (Register Transfer Level)</h3>
+<p>The <strong>RTL Generator</strong> persona takes the retrieved specifications and produces synthesizable Verilog/SystemVerilog code. This automates the creation of boilerplate hardware logic, allowing engineers to focus on high-level architecture rather than repetitive coding tasks.</p>
+<h3>4. Verified (Quality Control)</h3>
+<p>Design is incomplete without verification. The <strong>Verification Expert</strong> agent capability ensures that generated designs are testable. Nexus can generate SystemVerilog testbenches (UVM or simple) alongside the design, acknowledging that verification often consumes the majority of the engineering effort.</p>
+<h2>🎯 Use Case: Accelerating IP Development</h2>
+<p><strong>Scenario</strong>: An engineer needs a customized <strong>APB (Advanced Peripheral Bus) Bridge</strong>.</p>
+<ol>
+<li><strong>Input</strong>: Engineer types: <em>"Generate an APB bridge with 32-bit data width and PREADY support."</em></li>
+<li><strong>Process</strong>:<ul>
+<li><em>Orchestrator</em> parses intent.</li>
+<li><em>Knowledge Agent</em> looks up APB protocol specs for signal timing.</li>
+<li><em>RTL Agent</em> writes the Verilog module.</li>
+<li><em>Verification Agent</em> creates a testbench to check <code>PENABLE</code> and <code>PSEL</code> timing.</li>
+</ul>
+</li>
+<li><strong>Output</strong>: A fully formed, lint-checked code snippet + verification plan.</li>
+</ol>
+<h2>Local Model Setup (Optional but Recommended)</h2>
+<p>To run fully locally without API keys:
+1.  <strong>Install Ollama</strong>: Download and install from <a href="https://ollama.com/">ollama.com</a>.
+    &gt; <strong>Note</strong>: You <em>must</em> install the Ollama application manually. The script cannot do this for you.
+2.  <strong>Pull the Model</strong>: The <code>run_demo.sh</code> script will attempt to auto-pull <code>llama3</code> if Ollama is installed. You can also do it manually:
+    <code>bash
+    ollama pull llama3</code>
+3.  In the Nexus UI, select <strong>"Local (Ollama - Llama3)"</strong> from the dropdown.</p>
+<h2>Data Ingestion (RAG)</h2>
+<p>To populate the Knowledge Base with the latest specs:</p>
+<pre><code class="language-bash">python3 ingest_data.py
+</code></pre>
+<p>This will read all text files in <code>backend/data/specs</code>, chunk them, and store embeddings in <code>backend/data/chroma_db</code>.</p>
+<p>Nexus directly addresses this by:
+- <strong>Reducing Boilerplate</strong>: Automating repetitive coding tasks.
+- <strong>Democratizing Knowledge</strong>: Making complex specs instantly queryable.
+- <strong>Ensuring Quality</strong>: Embedding verification early in the design loop.</p>
+<hr />
+<h2>📝 Sample Outputs</h2>
+<p>See <a href="SAMPLE_OUTPUT.md">SAMPLE_OUTPUT.md</a> for a full transcript of a live session generating an AXI4-Lite Slave module.</p>
+<p><em>Created by Manu Dal Borgo for the AI Solutions Architect application at Arm.</em></p>
+    </body>
+    </html>
+    

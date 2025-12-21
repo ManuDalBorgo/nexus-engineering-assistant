@@ -29,11 +29,25 @@ Nexus operates on a **Hub-and-Spoke Agentic Architecture**:
 
 ## 🧠 Core Concepts Explained
 
-### 1. Orchestrated (The "Brain")
+### 1. Model Strategy: Specialized for Software Engineering
+Unlike generic chatbots (like standard Llama 3 or GPT-4), we utilize models **specifically fine-tuned for code and engineering tasks**:
+
+*   **Devstral Small 2 24B**:
+    *   *Specialization*: **Agentic Software Engineering**.
+    *   *Why?*: Designed by Mistral AI specifically to power software agents. It is trained to understand file structures, diffs, and complex tool usage, making it far superior to generic models for tasks like "refactor this module" or "write a test plan".
+    
+*   **Qwen 2.5 Coder 7B**:
+    *   *Specialization*: **High-Performance Coding**.
+    *   *Why?*: A purpose-built coding model that rivals GPT-4 on coding benchmarks (HumanEval) despite its small size. It is not a general-purpose chat model; its weights are optimized purely for understanding and generating programming languages (Verilog, Python, C++).
+
+### 2. Orchestrated (The "Brain")
 The **NexusOrchestrator** serves as the central manager. It receives raw engineering requests, analyzes the intent, and systematically coordinates the underlying agents. Instead of a simple chatbot response, the system breaks down complex tasks, calls the RAG system for context, and then constructs the final prompt for the LLM. This demonstrates a true **Agentic Workflow**.
 
-### 2. RAG (Retrieval-Augmented Generation)
+### 3. RAG (Retrieval-Augmented Generation)
 To prevent "hallucinations" and ensure technical accuracy, Nexus uses a Retrieval-Augmented Generation architecture. The system ingests the **AMBA AXI4 Protocol Specifications** into a local vector database (`ChromaDB`). When a user requests an "AXI Slave," the system searches this database, retrieves the exact signal definitions (e.g., `AWVALID`, `WREADY`), and grounds its response in Arm's official documentation.
+
+> **Why RAG is Critical for Hardware**:
+> Unlike software languages (Python/JS) where training data is abundant, high-quality open-source datasets for hardware protocols (AXI, CHI, ACE) are scarce. Most models, including Devstral, haven't seen enough Verilog training data to memorize these specs perfectly. Nexus solves this by "injecting" the knowledge at runtime via RAG, allowing even smaller models to generate protocol-compliant hardware.
 
 ### 3. RTL (Register Transfer Level)
 The **RTL Generator** persona takes the retrieved specifications and produces synthesizable Verilog/SystemVerilog code. This automates the creation of boilerplate hardware logic, allowing engineers to focus on high-level architecture rather than repetitive coding tasks.
@@ -56,11 +70,11 @@ Design is incomplete without verification. The **Verification Expert** agent cap
 To run fully locally without API keys:
 1.  **Install Ollama**: Download and install from [ollama.com](https://ollama.com/).
     > **Note**: You *must* install the Ollama application manually. The script cannot do this for you.
-2.  **Pull the Model**: The `run_demo.sh` script will attempt to auto-pull `llama3` if Ollama is installed. You can also do it manually:
+2.  **Pull the Model**: The `run_demo.sh` script will attempt to auto-pull `devstral-small-2` if Ollama is installed. You can also do it manually:
     ```bash
-    ollama pull llama3
+    ollama pull devstral-small-2
     ```
-3.  In the Nexus UI, select **"Local (Ollama - Llama3)"** from the dropdown.
+3.  In the Nexus UI, select **"Local (Ollama - Devstral)"** from the dropdown (this is now default).
 
 ## Data Ingestion (RAG)
 To populate the Knowledge Base with the latest specs:

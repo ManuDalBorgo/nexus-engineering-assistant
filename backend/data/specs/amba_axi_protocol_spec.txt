@@ -1,0 +1,26 @@
+AMBA AXI4 Protocol Specification (Excerpt)
+
+1. Introduction
+The AMBA AXI protocol is a burst-based protocol for high-bandwidth, low-latency on-chip communication.
+
+2. Signal Descriptions
+- Global Signals: ACLK (Clock), ARESETn (Reset, active low).
+- Write Address Channel: AWADDR, AWVALID, AWREADY, AWID, AWLEN, AWSIZE, AWBURST.
+- Write Data Channel: WDATA, WSTRB, WLAST, WVALID, WREADY.
+- Write Response Channel: BRESP, BVALID, BREADY, BID.
+- Read Address Channel: ARADDR, ARVALID, ARREADY, ARID, ARLEN, ARSIZE, ARBURST.
+- Read Data Channel: RDATA, RRESP, RLAST, RVALID, RREADY, RID.
+
+3. Handshake Process
+All five channels use the same VALID/READY handshake mechanism.
+- The source generates the VALID signal to indicate when the address, data, or control information is available.
+- The destination generates the READY signal to indicate that it can accept the information.
+- Transfer occurs only when both the VALID and READY signals are HIGH.
+
+4. Burst Types (AxBURST)
+- FIXED (0b00): The address remains the same for every transfer in the burst. Useful for FIFO access.
+- INCR (0b01): The address increments for each transfer in the burst. Most common type.
+- WRAP (0b10): The address wraps around a boundary. Useful for cache line fills.
+
+5. Atomic Accesses
+AXI4 removes support for Locked transactions but retains Exclusive accesses for semaphore type operations.

@@ -45,11 +45,21 @@ st.markdown("### Accelerating Semiconductor Design with Agentic AI")
 with st.sidebar:
     st.header("Configuration")
     # Added "Local (Ollama)" to the list
-    model_choice = st.selectbox("Model", ["Claude Sonnet 4", "Local (Ollama - Llama3)", "GPT-4o"])
+    # Added "Local (Ollama)" to the list
+    model_options = [
+        "Local Fast (Ollama - Qwen 2.5 7B)", 
+        "Local Strong (Ollama - Devstral 24B)",
+        "Mistral API (Cloud)",
+        "Claude Sonnet 4", 
+        "GPT-4o"
+    ]
+    model_choice = st.selectbox("Model", model_options, index=0)
     
     # Map selection to provider ID
     provider_map = {
-        "Local (Ollama - Llama3)": "local",
+        "Local Fast (Ollama - Qwen 2.5 7B)": "local_fast",
+        "Local Strong (Ollama - Devstral 24B)": "devstral",
+        "Mistral API (Cloud)": "mistral_api",
         "Claude Sonnet 4": "anthropic",
         "GPT-4o": "openai"
     }

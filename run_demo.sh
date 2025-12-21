@@ -38,10 +38,10 @@ else
         sleep 5
     fi
     
-    # Check if llama3 is pulled
-    if ! ollama list | grep -q "llama3"; then
-        echo "⬇️  Pulling Llama 3 model (this may take a while)..."
-        ollama pull llama3
+    # Check for fast model (Qwen 2.5 7B)
+    if ! ollama list | grep -q "qwen2.5-coder:7b"; then
+        echo "⬇️  Pulling Qwen 2.5 Coder (7B) for fast local inference..."
+        ollama pull qwen2.5-coder:7b
     fi
 fi
 

@@ -18,8 +18,8 @@ def query_agent(request: QueryRequest):
         # Import here to avoid circular dependencies or path issues during startup
         from backend.app.agents.orchestrator import NexusOrchestrator
         
-        # Initialize agent (defaults to Anthropic/OpenAI based on env)
-        agent = NexusOrchestrator(model_provider="anthropic")
+        # Initialize agent (defaults to local_fast/devstral/anthropic based on env)
+        agent = NexusOrchestrator(model_provider="local_fast")
         
         # Get response (using the non-streaming method for REST API)
         response = agent.process_request(request.query)

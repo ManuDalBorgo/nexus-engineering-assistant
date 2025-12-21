@@ -14,4 +14,5 @@ tiktoken
 sentence-transformers
 streamlit
 watchdog
+langchain-mistralai
 numpy<2.0.0

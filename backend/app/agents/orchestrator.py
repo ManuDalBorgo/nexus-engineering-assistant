@@ -7,6 +7,7 @@ load_dotenv()
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain_ollama import ChatOllama
+from langchain_mistralai import ChatMistralAI
 from langchain_core.output_parsers import StrOutputParser
 
 class NexusOrchestrator:
@@ -19,6 +20,15 @@ class NexusOrchestrator:
             return ChatOpenAI(model="gpt-4o", temperature=0)
         elif self.model_provider == "anthropic":
             return ChatAnthropic(model="claude-sonnet-4-20250514", temperature=0, max_tokens=4096)
+        elif self.model_provider == "devstral":
+             # Best open-source agentic coding model
+            return ChatOllama(model="devstral-small-2", temperature=0)
+        elif self.model_provider == "local_fast":
+             # Lightweight coding model (7B)
+            return ChatOllama(model="qwen2.5-coder:7b", temperature=0)
+        elif self.model_provider == "mistral_api":
+             # Cloud API for speed + smarts
+            return ChatMistralAI(model="mistral-large-latest", temperature=0)
         elif self.model_provider == "local":
             # Assumes the user has pulled the model: `ollama pull llama3`
             return ChatOllama(model="llama3", temperature=0)
@@ -67,7 +77,8 @@ class NexusOrchestrator:
                     "It looks like **Ollama** is not running or not installed.\n"
                     "1. Make sure you have installed Ollama from [ollama.com](https://ollama.com).\n"
                     "2. Run `ollama serve` in a terminal.\n"
-                    "3. Or, switch to **Claude 3 Opus** in the sidebar to use your API key."
+                    "3. Ensure you have the model: `ollama pull qwen2.5-coder:7b` (for speed) or `ollama pull devstral-small-2` (for smarts).\n"
+                    "4. Or, switch to **Claude/Mistral API**."
                 )
             return f"Error connecting to LLM: {error_msg}. Please ensure API keys are set in .env."
 
@@ -125,8 +136,8 @@ class NexusOrchestrator:
                     "To use the 'Local' option, you must have **Ollama** running in the background.\n"
                     "1.  **Install Ollama**: [Download here](https://ollama.com)\n"
                     "2.  **Start it**: Run `ollama serve` in a terminal or open the app.\n"
-                    "3.  **Pull the model**: Run `ollama pull llama3`.\n\n"
-                    "👉 *Switch back to 'Claude Sonnet 4' in the sidebar to use the API instead.*"
+                    "3.  **Pull the model**: Run `ollama pull qwen2.5-coder:7b`.\n\n"
+                    "👉 *Switch to an API provider (Claude/Mistral) if your local machine is too slow.*"
                 )
                 yield {"type": "error", "content": friendly_msg}
             else:
