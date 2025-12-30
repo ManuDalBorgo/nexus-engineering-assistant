@@ -1,9 +1,19 @@
 #!/bin/bash
 echo "Starting Nexus Engineering Assistant Demo..."
 
-# Check if python3 is available
+# Check if python3 is available and version >= 3.9
 if ! command -v python3 &> /dev/null; then
     echo "Error: python3 is not installed."
+    exit 1
+fi
+
+REQUIRED_VERSION="3.9"
+PYTHON_VERSION=$(python3 -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
+
+if [ "$(printf '%s\n' "$REQUIRED_VERSION" "$PYTHON_VERSION" | sort -V | head -n1)" != "$REQUIRED_VERSION" ]; then
+    echo "Error: Python version $PYTHON_VERSION is too old."
+    echo "Nexus requires Python $REQUIRED_VERSION or newer (found $PYTHON_VERSION)."
+    echo "Please install a newer version or point to it explicitly in this script."
     exit 1
 fi
 

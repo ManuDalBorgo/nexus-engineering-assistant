@@ -21,7 +21,7 @@ Nexus operates on a **Hub-and-Spoke Agentic Architecture**:
 5.  **Guardrails Layer**: Static analysis tools (linting) to validate outputs before presenting them to the user.
 
 ### Technology Stack
-- **Core Logic**: Python 3.10+
+- **Core Logic**: Python 3.9+
 - **LLM Orchestration**: LangChain / LangGraph
 - **Vector Database**: ChromaDB (for RAG)
 - **API Interface**: FastAPI
@@ -44,7 +44,7 @@ Unlike generic chatbots (like standard Llama 3 or GPT-4), we utilize models **sp
 The **NexusOrchestrator** serves as the central manager. It receives raw engineering requests, analyzes the intent, and systematically coordinates the underlying agents. Instead of a simple chatbot response, the system breaks down complex tasks, calls the RAG system for context, and then constructs the final prompt for the LLM. This demonstrates a true **Agentic Workflow**.
 
 ### 3. RAG (Retrieval-Augmented Generation)
-To prevent "hallucinations" and ensure technical accuracy, Nexus uses a Retrieval-Augmented Generation architecture. The system ingests the **AMBA AXI4 Protocol Specifications** into a local vector database (`ChromaDB`). When a user requests an "AXI Slave," the system searches this database, retrieves the exact signal definitions (e.g., `AWVALID`, `WREADY`), and grounds its response in Arm's official documentation.
+To prevent "hallucinations" and ensure technical accuracy, Nexus uses a Retrieval-Augmented Generation architecture. The system ingests the **AMBA AXI4 Protocol Specifications** into a local vector database (`ChromaDB`). When a user requests an "AXI Slave," the system searches this database, retrieves the exact signal definitions (e.g., `AWVALID`, `WREADY`), and grounds its response in Arm's official documentation. We use a **100-character chunk overlap** to ensure protocol consistency across segments.
 
 > **Why RAG is Critical for Hardware**:
 > Unlike software languages (Python/JS) where training data is abundant, high-quality open-source datasets for hardware protocols (AXI, CHI, ACE) are scarce. Most models, including Devstral, haven't seen enough Verilog training data to memorize these specs perfectly. Nexus solves this by "injecting" the knowledge at runtime via RAG, allowing even smaller models to generate protocol-compliant hardware.
