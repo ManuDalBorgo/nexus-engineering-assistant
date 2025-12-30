@@ -32,7 +32,7 @@ class KnowledgeBase:
             print("No documents found to ingest.")
             return
 
-        text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+        text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
         docs = text_splitter.split_documents(documents)
 
         print(f"Ingesting {len(docs)} chunks into VectorDB...")

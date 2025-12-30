@@ -105,7 +105,7 @@ if prompt := st.chat_input("Describe your design requirement (e.g., 'Generate an
                 from backend.app.agents.orchestrator import NexusOrchestrator
                 
                 # Initialize Agent with selected provider
-                agent = NexusOrchestrator(model_provider=selected_provider)
+                agent = NexusOrchestrator(model_provider=selected_provider, temperature=temperature)
                 
                 # Stream the response with intermediate steps
                 response_stream = agent.stream_request(prompt)

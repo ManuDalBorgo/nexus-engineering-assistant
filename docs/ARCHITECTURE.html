@@ -1,52 +1,95 @@
+<html>
 
-    <html>
-    <head>
-        <style>
-            body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; }
-            pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
-            code { background-color: #f4f4f4; padding: 2px 5px; border-radius: 3px; }
-            h1, h2, h3 { color: #333; }
-            table { border-collapse: collapse; width: 100%; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
-        </style>
-    </head>
-    <body>
-        <h1>System Architecture</h1>
-<h2>Component Diagram</h2>
-<pre><code class="language-mermaid">graph TD
-    User[User / Engineer] --&gt;|Browser| UI[Streamlit Interface]
-    UI --&gt;|Direct Import / API| Orchestrator[Orchestrator Agent]
+<head>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-    subgraph &quot;Nexus Core (Python)&quot;
-        Orchestrator --&gt;|Task: Research| RAG[Knowledge Agent]
-        Orchestrator --&gt;|Task: Code| Coder[RTL Generator Agent]
-        Orchestrator --&gt;|Task: Verify| Verifier[Verification Agent]
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
 
-        RAG &lt;--&gt;|Query/Retrieve| VectorDB[(ChromaDB)]
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
 
-        Coder --&gt;|Draft Code| Guardrails[Syntax &amp; Lint Checker]
-        Guardrails --&gt;|Feedback| Coder
+        h1,
+        h2,
+        h3 {
+            color: #333;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>System Architecture (Version 2.0)</h1>
+    <h2>Component Diagram</h2>
+    <pre><code class="language-mermaid">graph TD
+    User[User / Engineer] -->|Browser| UI[Streamlit Interface]
+    UI -->|Direct Import / API| Orchestrator[Orchestrator Agent]
+
+    subgraph "Nexus Core (Python)"
+        Orchestrator -->|Task: Research| RAG[Knowledge Agent]
+        Orchestrator -->|Task: Code| Coder[RTL Generator Agent]
+        Orchestrator -->|Task: Verify| Verifier[Verification Agent]
+
+        RAG <-->|Query/Retrieve| VectorDB[(ChromaDB)]
+
+        Coder -->|Draft Code| Guardrails[Syntax & Lint Checker]
+        Guardrails -->|Feedback| Coder
     end
 
-    subgraph &quot;External Services&quot;
-        LLM[LLM Provider (Gemini/GPT/Claude)]
+    subgraph "Hybrid Inference Layer"
+        direction TB
+        Orchestrator -.->|Complex Reasoning| Devstral[Devstral Small 2 (24B)\n<i>Agentic 'Brain'</i>]
+        Coder -.->|Fast Gen| Qwen[Qwen 2.5 Coder (7B)\n<i>Local Speedster</i>]
+        Verifier -.->|Verification| Devstral
+        
+        Devstral -.->|Fallback| CloudAPI[Mistral/Anthropic API]
+        Qwen -.->|Fallback| CloudAPI
     end
-
-    Orchestrator -.-&gt; LLM
-    RAG -.-&gt; LLM
-    Coder -.-&gt; LLM
-    Verifier -.-&gt; LLM
 </code></pre>
-<h2>Data Flow</h2>
-<ol>
-<li><strong>Request Ingestion</strong>: The User submits a prompt via the UI.</li>
-<li><strong>Intent Classification</strong>: The Orchestrator analyzes the prompt to determine if it requires RAG (information lookup) or Generation (coding).</li>
-<li><strong>Context Retrieval</strong>: If technical details are needed (e.g., "AXI4 burst types"), the Knowledge Agent queries the VectorDB.</li>
-<li><strong>Generation</strong>: The RTL Generator Agent constructs the code, utilizing the retrieved context to ensure protocol compliance.</li>
-<li><strong>Validation</strong>: The generated code is passed through a static analysis layer (simulated or real <code>verilator</code> linting).</li>
-<li><strong>Response</strong>: The final artifacts (Code, Explanations, Testbenches) are streamed back to the UI.</li>
-</ol>
-    </body>
-    </html>
-    
+    <h2>Data Flow</h2>
+    <ol>
+        <li><strong>Request Ingestion</strong>: The User submits a prompt via the UI.</li>
+        <li><strong>Intent Classification</strong>: The Orchestrator analyzes the prompt to determine if it requires RAG
+            (information lookup) or Generation (coding).</li>
+        <li><strong>Context Retrieval</strong>: If technical details are needed (e.g., "AXI4 burst types"), the
+            Knowledge Agent queries the VectorDB.</li>
+        <li><strong>Generation</strong>: The RTL Generator Agent constructs the code, utilizing the retrieved context to
+            ensure protocol compliance.</li>
+        <li><strong>Validation</strong>: The generated code is passed through a static analysis layer (simulated or real
+            <code>verilator</code> linting).
+        </li>
+        <li><strong>Response</strong>: The final artifacts (Code, Explanations, Testbenches) are streamed back to the
+            UI.</li>
+    </ol>
+</body>
+
+</html>

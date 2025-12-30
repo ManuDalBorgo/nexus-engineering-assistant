@@ -11,29 +11,30 @@ from langchain_mistralai import ChatMistralAI
 from langchain_core.output_parsers import StrOutputParser
 
 class NexusOrchestrator:
-    def __init__(self, model_provider="local"):
+    def __init__(self, model_provider="local", temperature=0.0):
         self.model_provider = model_provider
+        self.temperature = temperature
         self.llm = self._get_llm()
 
     def _get_llm(self):
         if self.model_provider == "openai":
-            return ChatOpenAI(model="gpt-4o", temperature=0)
+            return ChatOpenAI(model="gpt-4o", temperature=self.temperature)
         elif self.model_provider == "anthropic":
-            return ChatAnthropic(model="claude-sonnet-4-20250514", temperature=0, max_tokens=4096)
+            return ChatAnthropic(model="claude-sonnet-4-20250514", temperature=self.temperature, max_tokens=4096)
         elif self.model_provider == "devstral":
              # Best open-source agentic coding model
-            return ChatOllama(model="devstral-small-2", temperature=0)
+            return ChatOllama(model="devstral-small-2", temperature=self.temperature)
         elif self.model_provider == "local_fast":
              # Lightweight coding model (7B)
-            return ChatOllama(model="qwen2.5-coder:7b", temperature=0)
+            return ChatOllama(model="qwen2.5-coder:7b", temperature=self.temperature)
         elif self.model_provider == "mistral_api":
              # Cloud API for speed + smarts
-            return ChatMistralAI(model="mistral-large-latest", temperature=0)
+            return ChatMistralAI(model="mistral-large-latest", temperature=self.temperature)
         elif self.model_provider == "local":
             # Assumes the user has pulled the model: `ollama pull llama3`
-            return ChatOllama(model="llama3", temperature=0)
+            return ChatOllama(model="llama3", temperature=self.temperature)
         else:
-            return ChatAnthropic(model="claude-sonnet-4-20250514", temperature=0, max_tokens=4096)
+            return ChatAnthropic(model="claude-sonnet-4-20250514", temperature=self.temperature, max_tokens=4096)
 
     def process_request(self, user_query: str):
         """

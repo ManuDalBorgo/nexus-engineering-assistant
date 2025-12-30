@@ -7,6 +7,7 @@ app = FastAPI(title="Nexus Engineering Assistant API", version="0.1.0")
 class QueryRequest(BaseModel):
     query: str
     context: Optional[str] = None
+    temperature: Optional[float] = 0.0
 
 @app.get("/")
 def read_root():
@@ -19,7 +20,7 @@ def query_agent(request: QueryRequest):
         from backend.app.agents.orchestrator import NexusOrchestrator
         
         # Initialize agent (defaults to local_fast/devstral/anthropic based on env)
-        agent = NexusOrchestrator(model_provider="local_fast")
+        agent = NexusOrchestrator(model_provider="local_fast", temperature=request.temperature)
         
         # Get response (using the non-streaming method for REST API)
         response = agent.process_request(request.query)
