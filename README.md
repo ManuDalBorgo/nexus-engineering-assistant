@@ -9,7 +9,7 @@ This project was built to showcase the capabilities required for the **AI Soluti
 - **Guardrails & Evaluation**: Ensuring generated code meets strict syntax and safety standards.
 - **Scalable Architecture**: A modular design ready for enterprise deployment.
 
-## 🏗️ Solution Architecture
+## Solution Architecture
 
 ### High-Level Design
 Nexus operates on a **Hub-and-Spoke Agentic Architecture**:
@@ -27,7 +27,7 @@ Nexus operates on a **Hub-and-Spoke Agentic Architecture**:
 - **API Interface**: FastAPI
 - **Frontend**: Streamlit (for rapid, interactive prototyping).
 
-## 🧠 Core Concepts Explained
+## Core Concepts Explained
 
 ### 1. Model Strategy: Specialized for Software Engineering
 Unlike generic chatbots (like standard Llama 3 or GPT-4), we utilize models **specifically fine-tuned for code and engineering tasks**:
@@ -55,7 +55,7 @@ The **RTL Generator** persona takes the retrieved specifications and produces sy
 ### 4. Verified (Quality Control)
 Design is incomplete without verification. The **Verification Expert** agent capability ensures that generated designs are testable. Nexus can generate SystemVerilog testbenches (UVM or simple) alongside the design, acknowledging that verification often consumes the majority of the engineering effort.
 
-## 🎯 Use Case: Accelerating IP Development
+## Use Case: Accelerating IP Development
 **Scenario**: An engineer needs a customized **APB (Advanced Peripheral Bus) Bridge**.
 
 1.  **Input**: Engineer types: *"Generate an APB bridge with 32-bit data width and PREADY support."*
@@ -89,7 +89,5 @@ Nexus directly addresses this by:
 - **Ensuring Quality**: Embedding verification early in the design loop.
 
 ---
-## 📝 Sample Outputs
+## Sample Outputs
 See [SAMPLE_OUTPUT.md](SAMPLE_OUTPUT.md) for a full transcript of a live session generating an AXI4-Lite Slave module.
-
-*Created by Manu Dal Borgo for the AI Solutions Architect application at Arm.*
